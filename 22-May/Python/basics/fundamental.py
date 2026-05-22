@@ -40,7 +40,7 @@ print(" %f comes and goes " % (a))
 a = 10
 b = 3
 
-c= a/b;
+c = a / b
 print("Addition:", a + b)
 print("Subtraction:", a - b)
 print("Multiplication:", a * b)
@@ -48,4 +48,3 @@ print(f"Division:{c:.2f}")
 print("Floor Division:", a // b)
 print("Modulus:", a % b)
 print("Exponentiation:", a**b)
-
