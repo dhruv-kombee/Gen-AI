@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block title %}Students | College Registration Management{% endblock %}
+
+{% block content %}
+<section class="content-card">
+    <div class="card-body">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+                <h1 class="section-title mb-1">Student Management</h1>
+                <p class="text-muted mb-0">Add, search, update, and remove student records.</p>
+            </div>
+            <a href="{{ url_for('students.create_student') }}" class="btn btn-campus">Add Student</a>
+        </div>
+
+        <form method="get" class="row g-3 align-items-end mb-4">
+            <div class="col-md-8 col-lg-9">
+                <label for="search" class="form-label">Search Students</label>
+                <input type="text" class="form-control" id="search" name="search" value="{{ search_term }}" placeholder="Search by student name or enrollment number">
+            </div>
+            <div class="col-md-4 col-lg-3 d-flex gap-2">
+                <button type="submit" class="btn btn-campus flex-grow-1">Search</button>
+                <a href="{{ url_for('students.list_students') }}" class="btn btn-light border flex-grow-1">Reset</a>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-campus align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Enrollment No.</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Year</th>
+                        <th>Courses</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.full_name }}</td>
+                            <td>{{ student.enrollment_number }}</td>
+                            <td>{{ student.email }}</td>
+                            <td>{{ student.department }}</td>
+                            <td>{{ student.year }}</td>
+                            <td><span class="badge rounded-pill text-bg-light">{{ student.registration_count }}</span></td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="{{ url_for('students.edit_student', student_id=student.id) }}" class="btn btn-sm btn-campus-outline">Edit</a>
+                                    <form method="post" action="{{ url_for('students.delete_student', student_id=student.id) }}" data-confirm="Delete this student and all related registrations?">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">No students found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

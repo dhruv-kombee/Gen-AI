@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}College Registration Management System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    {% set endpoint = request.endpoint or '' %}
+    <div class="app-shell">
+        <nav class="navbar navbar-expand-lg app-navbar sticky-top">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('dashboard.index') if session.get('admin_id') else url_for('auth.login') }}">
+                    <span class="brand-mark"><i class="bi bi-mortarboard-fill"></i></span>
+                    <span>
+                        <span class="brand-title">Campus Register</span>
+                        <small class="brand-subtitle d-block">College Registration Management System</small>
+                    </span>
+                </a>
+
+                {% if session.get("admin_id") %}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'active' if endpoint.startswith('dashboard.') else '' }}" href="{{ url_for('dashboard.index') }}">
+                                <i class="bi bi-grid-1x2-fill me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'active' if endpoint.startswith('students.') else '' }}" href="{{ url_for('students.index') }}">
+                                <i class="bi bi-people-fill me-1"></i>Students
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'active' if endpoint.startswith('courses.') else '' }}" href="{{ url_for('courses.index') }}">
+                                <i class="bi bi-journal-bookmark-fill me-1"></i>Courses
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'active' if endpoint.startswith('registrations.') else '' }}" href="{{ url_for('registrations.index') }}">
+                                <i class="bi bi-clipboard-check-fill me-1"></i>Registrations
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-3">
+                            <form method="post" action="{{ url_for('auth.logout') }}">
+                                <button class="btn btn-outline-light btn-sm" type="submit">
+                                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+
+        <main class="py-4">
+            <div class="container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-stack mb-4">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <footer class="app-footer">
+        <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+            <span>Admin: {{ session.get('admin_username', 'Guest') }}</span>
+            <span>&copy; {{ current_year }} Campus Register</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ page_title }} | College Registration Management{% endblock %}
+
+{% block content %}
+<section class="content-card">
+    <div class="card-body p-4 p-lg-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="section-title mb-1">{{ page_title }}</h1>
+                <p class="text-muted mb-0">Maintain accurate student academic records.</p>
+            </div>
+            <a href="{{ url_for('students.list_students') }}" class="btn btn-light border">Back to Students</a>
+        </div>
+
+        <form method="post" action="{{ form_action }}" class="needs-validation" novalidate>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control {% if errors.full_name %}is-invalid{% endif %}" id="full_name" name="full_name" value="{{ form_data.full_name if form_data else '' }}" minlength="3" required>
+                    <div class="invalid-feedback {% if errors.full_name %}d-block{% endif %}">{{ errors.full_name or "Please enter the student's full name." }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="enrollment_number" class="form-label">Enrollment Number</label>
+                    <input type="text" class="form-control {% if errors.enrollment_number %}is-invalid{% endif %}" id="enrollment_number" name="enrollment_number" value="{{ form_data.enrollment_number if form_data else '' }}" pattern="[A-Za-z0-9/_-]{4,20}" required>
+                    <div class="invalid-feedback {% if errors.enrollment_number %}d-block{% endif %}">{{ errors.enrollment_number or "Use 4 to 20 letters, numbers, dashes, slashes, or underscores." }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control {% if errors.email %}is-invalid{% endif %}" id="email" name="email" value="{{ form_data.email if form_data else '' }}" required>
+                    <div class="invalid-feedback {% if errors.email %}d-block{% endif %}">{{ errors.email or "Please enter a valid email address." }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control {% if errors.phone %}is-invalid{% endif %}" id="phone" name="phone" value="{{ form_data.phone if form_data else '' }}" pattern="[0-9+\-\s]{7,15}">
+                    <div class="invalid-feedback {% if errors.phone %}d-block{% endif %}">{{ errors.phone or "Please enter a valid phone number." }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="department" class="form-label">Department</label>
+                    <select class="form-select {% if errors.department %}is-invalid{% endif %}" id="department" name="department" required>
+                        <option value="">Select Department</option>
+                        {% for department in departments %}
+                            <option value="{{ department }}" {% if form_data and form_data.department == department %}selected{% endif %}>{{ department }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback {% if errors.department %}d-block{% endif %}">{{ errors.department or "Please select a department." }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="year" class="form-label">Academic Year</label>
+                    <select class="form-select {% if errors.year %}is-invalid{% endif %}" id="year" name="year" required>
+                        <option value="">Select Year</option>
+                        {% for year in academic_years %}
+                            <option value="{{ year }}" {% if form_data and form_data.year|string == year|string %}selected{% endif %}>Year {{ year }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback {% if errors.year %}d-block{% endif %}">{{ errors.year or "Please choose the academic year." }}</div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-campus">{{ submit_label }}</button>
+                <a href="{{ url_for('students.list_students') }}" class="btn btn-light border">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

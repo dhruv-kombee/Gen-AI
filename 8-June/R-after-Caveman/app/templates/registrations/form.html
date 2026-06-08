@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Register Courses | Campus Register{% endblock %}
+
+{% block content %}
+{% set selected_ids = form_data.get('course_ids', []) %}
+
+<section class="page-header">
+    <div>
+        <span class="eyebrow">New Registration</span>
+        <h1>Assign courses to a student</h1>
+        <p>Select one student and one or more courses. Duplicate registrations are skipped automatically.</p>
+    </div>
+    <a href="{{ url_for('registrations.index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Back to Registrations
+    </a>
+</section>
+
+<section class="form-section">
+    <form method="post" class="needs-validation" novalidate data-checkbox-group="course_ids">
+        <div class="row g-4">
+            <div class="col-12">
+                <label for="student_id" class="form-label">Student</label>
+                <select
+                    id="student_id"
+                    name="student_id"
+                    class="form-select {% if errors.get('student_id') %}is-invalid{% endif %}"
+                    required
+                >
+                    <option value="">Choose a student...</option>
+                    {% for student in students %}
+                        <option value="{{ student.id }}" {% if form_data.get('student_id') == student.id|string %}selected{% endif %}>
+                            {{ student.full_name }} ({{ student.enrollment_number }})
+                        </option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">{{ errors.get("student_id", "Select a student.") }}</div>
+            </div>
+
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label mb-0">Available Courses</label>
+                    <small class="text-body-secondary">Choose one or more courses</small>
+                </div>
+
+                <div class="course-grid">
+                    {% for course in courses %}
+                    <label class="course-option">
+                        <input
+                            type="checkbox"
+                            name="course_ids"
+                            value="{{ course.id }}"
+                            {% if course.id|string in selected_ids %}checked{% endif %}
+                        >
+                        <span class="course-option-body">
+                            <strong>{{ course.course_code }}</strong>
+                            <span>{{ course.course_name }}</span>
+                            <small>{{ course.department }} | {{ course.credit_hours }} credits | {{ course.semester }}</small>
+                        </span>
+                    </label>
+                    {% else %}
+                    <div class="empty-state">No courses available. Add courses before creating registrations.</div>
+                    {% endfor %}
+                </div>
+
+                {% if errors.get("course_ids") %}
+                    <div class="text-danger small mt-2" data-checkbox-error>{{ errors.get("course_ids") }}</div>
+                {% else %}
+                    <div class="text-danger small mt-2 d-none" data-checkbox-error>Select at least one course.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex flex-column flex-sm-row gap-3">
+            <button type="submit" class="btn btn-campus">
+                <i class="bi bi-save me-1"></i>Save Registration
+            </button>
+            <a href="{{ url_for('registrations.index') }}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
+

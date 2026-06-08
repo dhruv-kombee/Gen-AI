@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found | Campus Register{% endblock %}
+
+{% block content %}
+<section class="error-section">
+    <div class="error-panel">
+        <span class="error-code">404</span>
+        <h1>We could not find that page.</h1>
+        <p>The resource you requested does not exist or may have been moved.</p>
+        <a href="{{ url_for('dashboard.index') if session.get('admin_id') else url_for('auth.login') }}" class="btn btn-campus">
+            Return to Main Page
+        </a>
+    </div>
+</section>
+{% endblock %}
+

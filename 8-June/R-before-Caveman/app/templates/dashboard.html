@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard | College Registration Management{% endblock %}
+
+{% block content %}
+<section class="hero-panel mb-4">
+    <span class="eyebrow">Dashboard</span>
+    <h1>Campus Enrollment Overview</h1>
+    <p class="lead mb-0">Track academic operations, registration trends, and the latest enrollment activity from a single screen.</p>
+</section>
+
+<section class="row g-4 mb-4">
+    <div class="col-md-4">
+        <article class="content-card stat-card h-100">
+            <div class="card-body">
+                <p class="stat-label">Total Students</p>
+                <h2 class="stat-value">{{ stats.students }}</h2>
+                <p class="stat-note mb-0">Active student records in the system.</p>
+            </div>
+        </article>
+    </div>
+    <div class="col-md-4">
+        <article class="content-card stat-card h-100">
+            <div class="card-body">
+                <p class="stat-label">Total Courses</p>
+                <h2 class="stat-value">{{ stats.courses }}</h2>
+                <p class="stat-note mb-0">Courses currently available for registration.</p>
+            </div>
+        </article>
+    </div>
+    <div class="col-md-4">
+        <article class="content-card stat-card h-100">
+            <div class="card-body">
+                <p class="stat-label">Total Registrations</p>
+                <h2 class="stat-value">{{ stats.registrations }}</h2>
+                <p class="stat-note mb-0">Confirmed student course enrollments.</p>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="row g-4">
+    <div class="col-lg-7">
+        <article class="content-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h2 class="section-title mb-1">Recent Registrations</h2>
+                        <p class="text-muted mb-0">The latest courses students have enrolled in.</p>
+                    </div>
+                    <a class="btn btn-campus-outline btn-sm" href="{{ url_for('registrations.manage_registrations') }}">Manage</a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-campus align-middle">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Enrollment No.</th>
+                                <th>Course</th>
+                                <th>Registered On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registration in recent_registrations %}
+                                <tr>
+                                    <td>{{ registration.full_name }}</td>
+                                    <td>{{ registration.enrollment_number }}</td>
+                                    <td>{{ registration.course_code }} - {{ registration.course_title }}</td>
+                                    <td>{{ registration.registered_at }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">No registrations available yet.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </article>
+    </div>
+    <div class="col-lg-5">
+        <article class="content-card h-100">
+            <div class="card-body">
+                <h2 class="section-title mb-3">Quick Actions</h2>
+                <div class="quick-action-grid">
+                    <a href="{{ url_for('students.create_student') }}" class="quick-action-card">
+                        <span class="quick-action-title">Add Student</span>
+                        <span class="quick-action-text">Create a new student profile with enrollment and department details.</span>
+                    </a>
+                    <a href="{{ url_for('courses.create_course') }}" class="quick-action-card">
+                        <span class="quick-action-title">Add Course</span>
+                        <span class="quick-action-text">Publish a new course with credits, capacity, and department information.</span>
+                    </a>
+                    <a href="{{ url_for('registrations.manage_registrations') }}" class="quick-action-card">
+                        <span class="quick-action-title">Register Courses</span>
+                        <span class="quick-action-text">Enroll students into one or more courses while preventing duplicates.</span>
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

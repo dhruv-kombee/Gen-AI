@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Students | Campus Register{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Student Management</span>
+        <h1>Student records</h1>
+        <p>Search, review, and update student profiles with course visibility from one view.</p>
+    </div>
+    <a href="{{ url_for('students.create') }}" class="btn btn-campus">
+        <i class="bi bi-person-plus-fill me-1"></i>Add Student
+    </a>
+</section>
+
+<section class="toolbar-section">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-12 col-lg-5">
+            <label for="search" class="form-label">Search Students</label>
+            <input
+                type="text"
+                class="form-control"
+                id="search"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search by name or enrollment number"
+            >
+        </div>
+        <div class="col-12 col-sm-6 col-lg-auto">
+            <button type="submit" class="btn btn-campus-secondary w-100">
+                <i class="bi bi-search me-1"></i>Search
+            </button>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-auto">
+            <a href="{{ url_for('students.index') }}" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-arrow-clockwise me-1"></i>Reset
+            </a>
+        </div>
+    </form>
+</section>
+
+<section class="table-section">
+    <div class="table-responsive data-table-wrap">
+        <table class="table align-middle custom-table mb-0">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Department</th>
+                    <th>Contact</th>
+                    <th>Registered Courses</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        <div class="fw-semibold">{{ student.full_name }}</div>
+                        <small class="text-body-secondary">{{ student.enrollment_number }} | Year {{ student.year_level }}</small>
+                    </td>
+                    <td>{{ student.department }}</td>
+                    <td>
+                        <div>{{ student.email }}</div>
+                        <small class="text-body-secondary">{{ student.phone or 'No phone number' }}</small>
+                    </td>
+                    <td>
+                        {% if student.registered_courses %}
+                            <span class="course-badge">{{ student.registered_courses }}</span>
+                        {% else %}
+                            <span class="text-body-secondary">No courses registered</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-2">
+                            <a href="{{ url_for('students.edit', student_id=student.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <form method="post" action="{{ url_for('students.delete', student_id=student.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Delete this student record?">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-body-secondary">No student records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+

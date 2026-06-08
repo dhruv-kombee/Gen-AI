@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | Campus Register{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Course Form</span>
+        <h1>{{ page_title }}</h1>
+        <p>Keep the course catalog current so registrations remain accurate and searchable.</p>
+    </div>
+    <a href="{{ url_for('courses.index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Back to Courses
+    </a>
+</section>
+
+<section class="form-section">
+    <form method="post" action="{{ form_action }}" class="needs-validation" novalidate>
+        {% if errors.get("general") %}
+            <div class="alert alert-danger">{{ errors.get("general") }}</div>
+        {% endif %}
+
+        <div class="row g-4">
+            <div class="col-12 col-md-6">
+                <label for="course_code" class="form-label">Course Code</label>
+                <input
+                    type="text"
+                    id="course_code"
+                    name="course_code"
+                    class="form-control {% if errors.get('course_code') %}is-invalid{% endif %}"
+                    value="{{ form_data.get('course_code', '') }}"
+                    pattern="[A-Za-z0-9\-]{3,15}"
+                    required
+                >
+                <div class="invalid-feedback">{{ errors.get("course_code", "Enter a valid course code.") }}</div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label for="course_name" class="form-label">Course Name</label>
+                <input
+                    type="text"
+                    id="course_name"
+                    name="course_name"
+                    class="form-control {% if errors.get('course_name') %}is-invalid{% endif %}"
+                    value="{{ form_data.get('course_name', '') }}"
+                    minlength="4"
+                    required
+                >
+                <div class="invalid-feedback">{{ errors.get("course_name", "Enter a course name.") }}</div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <label for="department" class="form-label">Department</label>
+                <input
+                    type="text"
+                    id="department"
+                    name="department"
+                    class="form-control {% if errors.get('department') %}is-invalid{% endif %}"
+                    value="{{ form_data.get('department', '') }}"
+                    required
+                >
+                <div class="invalid-feedback">{{ errors.get("department", "Department is required.") }}</div>
+            </div>
+
+            <div class="col-12 col-md-3">
+                <label for="credit_hours" class="form-label">Credit Hours</label>
+                <input
+                    type="number"
+                    id="credit_hours"
+                    name="credit_hours"
+                    class="form-control {% if errors.get('credit_hours') %}is-invalid{% endif %}"
+                    value="{{ form_data.get('credit_hours', '') }}"
+                    min="1"
+                    max="6"
+                    required
+                >
+                <div class="invalid-feedback">{{ errors.get("credit_hours", "Credit hours must be between 1 and 6.") }}</div>
+            </div>
+
+            <div class="col-12 col-md-3">
+                <label for="semester" class="form-label">Semester</label>
+                <select
+                    id="semester"
+                    name="semester"
+                    class="form-select {% if errors.get('semester') %}is-invalid{% endif %}"
+                    required
+                >
+                    <option value="">Choose...</option>
+                    {% for option in ["Fall", "Spring", "Summer", "Winter"] %}
+                        <option value="{{ option }}" {% if form_data.get('semester') == option %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">{{ errors.get("semester", "Choose a semester.") }}</div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex flex-column flex-sm-row gap-3">
+            <button type="submit" class="btn btn-campus">{{ submit_label }}</button>
+            <a href="{{ url_for('courses.index') }}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
+

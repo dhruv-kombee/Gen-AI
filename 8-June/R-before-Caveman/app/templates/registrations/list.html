@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block title %}Registrations | College Registration Management{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-xl-5">
+        <section class="content-card h-100">
+            <div class="card-body">
+                <h1 class="section-title mb-1">Course Registration</h1>
+                <p class="text-muted mb-4">Assign one or more courses to a student while automatically preventing duplicates.</p>
+
+                {% if not students or not courses %}
+                    <div class="alert alert-warning mb-0">
+                        Add at least one student and one course before creating registrations.
+                    </div>
+                {% else %}
+                    <form method="post" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label for="student_id" class="form-label">Select Student</label>
+                            <select class="form-select {% if errors.student_id %}is-invalid{% endif %}" id="student_id" name="student_id" required>
+                                <option value="">Choose Student</option>
+                                {% for student in students %}
+                                    <option value="{{ student.id }}" {% if form_data.student_id|string == student.id|string %}selected{% endif %}>
+                                        {{ student.full_name }} ({{ student.enrollment_number }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback {% if errors.student_id %}d-block{% endif %}">{{ errors.student_id or "Please select a student." }}</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label d-block">Select Courses</label>
+                            <div class="checkbox-grid {% if errors.course_ids %}is-invalid{% endif %}" data-checkbox-group data-min-checks="1">
+                                {% for course in courses %}
+                                    <label class="course-check">
+                                        <input type="checkbox" name="course_ids" value="{{ course.id }}" {% if course.id in form_data.course_ids %}checked{% endif %}>
+                                        <span>
+                                            <strong>{{ course.course_code }}</strong>
+                                            <small>{{ course.title }}</small>
+                                        </span>
+                                    </label>
+                                {% endfor %}
+                                <div class="group-feedback invalid-feedback {% if errors.course_ids %}d-block{% endif %}">{{ errors.course_ids or "Please select at least one course." }}</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-campus w-100">Register Selected Courses</button>
+                    </form>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+    <div class="col-xl-7">
+        <section class="hero-panel h-100">
+            <span class="eyebrow">Registration Guidelines</span>
+            <h2 class="mb-3">Enrollment rules stay consistent.</h2>
+            <p class="lead mb-3">Each student-course pair is stored once, duplicate attempts are skipped, and linked registrations are cleaned up automatically when students or courses are deleted.</p>
+            <div class="info-chip-list">
+                <span class="info-chip">Duplicate-safe</span>
+                <span class="info-chip">SQLite-backed</span>
+                <span class="info-chip">API-ready</span>
+            </div>
+        </section>
+    </div>
+</div>
+
+<section class="content-card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="section-title mb-1">Registered Courses by Student</h2>
+                <p class="text-muted mb-0">Review current registrations and remove individual course enrollments.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for student in registration_cards %}
+                <div class="col-md-6 col-xl-4">
+                    <article class="student-registration-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <h3 class="student-registration-name">{{ student.full_name }}</h3>
+                                    <p class="text-muted mb-1">{{ student.enrollment_number }}</p>
+                                    <p class="small text-muted mb-0">{{ student.department }} | Year {{ student.year }}</p>
+                                </div>
+                                <span class="badge rounded-pill text-bg-light">{{ student.courses|length }}</span>
+                            </div>
+
+                            {% if student.courses %}
+                                <div class="registration-pill-list">
+                                    {% for course in student.courses %}
+                                        <div class="registration-pill">
+                                            <span>{{ course.label }}</span>
+                                            <form method="post" action="{{ url_for('registrations.delete_registration', registration_id=course.registration_id) }}" data-confirm="Remove this course registration?">
+                                                <button type="submit" class="btn btn-sm btn-link text-danger p-0 text-decoration-none">Remove</button>
+                                            </form>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted mb-0">No courses registered yet.</p>
+                            {% endif %}
+                        </div>
+                    </article>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <p class="text-center text-muted py-4 mb-0">No students available to display.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

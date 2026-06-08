@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Campus Register{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Overview</span>
+        <h1>Registration dashboard</h1>
+        <p>Track current student records, course availability, and the latest enrollment activity.</p>
+    </div>
+    <a href="{{ url_for('registrations.create') }}" class="btn btn-campus">
+        <i class="bi bi-plus-circle me-1"></i>New Registration
+    </a>
+</section>
+
+<section class="stats-grid mb-4">
+    <article class="stats-card">
+        <div class="stats-icon students"><i class="bi bi-people-fill"></i></div>
+        <div>
+            <div class="stats-label">Total Students</div>
+            <div class="stats-value">{{ metrics.total_students }}</div>
+        </div>
+    </article>
+    <article class="stats-card">
+        <div class="stats-icon courses"><i class="bi bi-journal-richtext"></i></div>
+        <div>
+            <div class="stats-label">Total Courses</div>
+            <div class="stats-value">{{ metrics.total_courses }}</div>
+        </div>
+    </article>
+    <article class="stats-card">
+        <div class="stats-icon registrations"><i class="bi bi-clipboard-check-fill"></i></div>
+        <div>
+            <div class="stats-label">Total Registrations</div>
+            <div class="stats-value">{{ metrics.total_registrations }}</div>
+        </div>
+    </article>
+</section>
+
+<section class="table-section">
+    <div class="section-heading">
+        <div>
+            <h2>Recent registrations</h2>
+            <p>Latest student-to-course enrollment activity in the system.</p>
+        </div>
+    </div>
+
+    <div class="table-responsive data-table-wrap">
+        <table class="table align-middle custom-table mb-0">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Enrollment No.</th>
+                    <th>Course</th>
+                    <th>Registered On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registration in metrics.recent_registrations %}
+                <tr>
+                    <td>{{ registration.full_name }}</td>
+                    <td>{{ registration.enrollment_number }}</td>
+                    <td>
+                        <div class="fw-semibold">{{ registration.course_code }}</div>
+                        <small class="text-body-secondary">{{ registration.course_name }}</small>
+                    </td>
+                    <td>{{ registration.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-body-secondary">No recent registrations found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+

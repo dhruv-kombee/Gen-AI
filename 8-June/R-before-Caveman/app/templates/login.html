@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}Admin Login | College Registration Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center min-vh-75">
+    <div class="col-12 col-lg-10">
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-6">
+                <section class="hero-panel h-100">
+                    <span class="eyebrow">Academic Operations</span>
+                    <h1>College Registration Management System</h1>
+                    <p class="lead mb-4">Manage students, courses, and enrollments from one responsive admin console designed for campus operations.</p>
+                    <div class="info-chip-list">
+                        <span class="info-chip">Student records</span>
+                        <span class="info-chip">Course catalog</span>
+                        <span class="info-chip">Registration tracking</span>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="content-card auth-card h-100">
+                    <div class="card-body p-4 p-lg-5">
+                        <h2 class="section-title mb-2">Admin Login</h2>
+                        <p class="text-muted mb-4">Sign in to access the college registration dashboard.</p>
+
+                        {% if error_message %}
+                            <div class="alert alert-danger">{{ error_message }}</div>
+                        {% endif %}
+
+                        <form method="post" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" value="{{ entered_username }}" required>
+                                <div class="invalid-feedback">Please enter your username.</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <div class="invalid-feedback">Please enter your password.</div>
+                            </div>
+                            <button type="submit" class="btn btn-campus w-100">Login to Dashboard</button>
+                        </form>
+
+                        <div class="demo-note mt-4">
+                            <strong>Default demo login:</strong> <code>admin</code> / <code>admin123</code>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

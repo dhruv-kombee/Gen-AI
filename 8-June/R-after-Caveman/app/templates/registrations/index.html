@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Registrations | Campus Register{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <span class="eyebrow">Course Registration</span>
+        <h1>Enrollment records</h1>
+        <p>Review all current student course assignments and remove incorrect registrations when needed.</p>
+    </div>
+    <a href="{{ url_for('registrations.create') }}" class="btn btn-campus">
+        <i class="bi bi-plus-circle me-1"></i>Register Courses
+    </a>
+</section>
+
+<section class="table-section">
+    <div class="table-responsive data-table-wrap">
+        <table class="table align-middle custom-table mb-0">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Course</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Registered On</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registration in registrations %}
+                <tr>
+                    <td>
+                        <div class="fw-semibold">{{ registration.full_name }}</div>
+                        <small class="text-body-secondary">{{ registration.enrollment_number }}</small>
+                    </td>
+                    <td>
+                        <div class="fw-semibold">{{ registration.course_code }}</div>
+                        <small class="text-body-secondary">{{ registration.course_name }}</small>
+                    </td>
+                    <td>{{ registration.department }}</td>
+                    <td>{{ registration.semester }}</td>
+                    <td>{{ registration.created_at }}</td>
+                    <td class="text-end">
+                        <form method="post" action="{{ url_for('registrations.delete', registration_id=registration.id) }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" data-confirm="Remove this registration?">
+                                <i class="bi bi-x-circle"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-body-secondary">No registrations available yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+

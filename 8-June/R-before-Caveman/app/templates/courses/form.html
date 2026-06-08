@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ page_title }} | College Registration Management{% endblock %}
+
+{% block content %}
+<section class="content-card">
+    <div class="card-body p-4 p-lg-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="section-title mb-1">{{ page_title }}</h1>
+                <p class="text-muted mb-0">Maintain a clean and accurate course catalog.</p>
+            </div>
+            <a href="{{ url_for('courses.list_courses') }}" class="btn btn-light border">Back to Courses</a>
+        </div>
+
+        <form method="post" action="{{ form_action }}" class="needs-validation" novalidate>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <label for="course_code" class="form-label">Course Code</label>
+                    <input type="text" class="form-control {% if errors.course_code %}is-invalid{% endif %}" id="course_code" name="course_code" value="{{ form_data.course_code if form_data else '' }}" minlength="4" maxlength="12" required>
+                    <div class="invalid-feedback {% if errors.course_code %}d-block{% endif %}">{{ errors.course_code or "Course code must be 4 to 12 characters long." }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="title" class="form-label">Course Title</label>
+                    <input type="text" class="form-control {% if errors.title %}is-invalid{% endif %}" id="title" name="title" value="{{ form_data.title if form_data else '' }}" minlength="5" required>
+                    <div class="invalid-feedback {% if errors.title %}d-block{% endif %}">{{ errors.title or "Please enter a course title." }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label for="department" class="form-label">Department</label>
+                    <select class="form-select {% if errors.department %}is-invalid{% endif %}" id="department" name="department" required>
+                        <option value="">Select Department</option>
+                        {% for department in departments %}
+                            <option value="{{ department }}" {% if form_data and form_data.department == department %}selected{% endif %}>{{ department }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback {% if errors.department %}d-block{% endif %}">{{ errors.department or "Please select a department." }}</div>
+                </div>
+                <div class="col-md-3">
+                    <label for="credits" class="form-label">Credits</label>
+                    <input type="number" class="form-control {% if errors.credits %}is-invalid{% endif %}" id="credits" name="credits" value="{{ form_data.credits if form_data else '' }}" min="1" max="6" required>
+                    <div class="invalid-feedback {% if errors.credits %}d-block{% endif %}">{{ errors.credits or "Please enter valid course credits." }}</div>
+                </div>
+                <div class="col-md-3">
+                    <label for="capacity" class="form-label">Capacity</label>
+                    <input type="number" class="form-control {% if errors.capacity %}is-invalid{% endif %}" id="capacity" name="capacity" value="{{ form_data.capacity if form_data else '' }}" min="1" max="500" required>
+                    <div class="invalid-feedback {% if errors.capacity %}d-block{% endif %}">{{ errors.capacity or "Please enter valid course capacity." }}</div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-campus">{{ submit_label }}</button>
+                <a href="{{ url_for('courses.list_courses') }}" class="btn btn-light border">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
