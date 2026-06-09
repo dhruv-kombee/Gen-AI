@@ -1,0 +1,11 @@
+StudentID,Name,Age,Department,Marks,Attendance,City
+101,Dhruv,21,IT,85,92,Surat
+102,Raj,20,IT,78,88,Ahmedabad
+103,Jay,22,CS,91,95,Surat
+104,Priya,21,CS,,90,Baroda
+105,Neha,20,IT,67,85,Rajkot
+106,Amit,23,EC,88,,Ahmedabad
+107,Karan,22,EC,73,80,Surat
+108,Riya,21,CS,95,98,Baroda
+109,Vikas,24,IT,82,87,Surat
+110,Pooja,20,EC,76,84,Rajkot
