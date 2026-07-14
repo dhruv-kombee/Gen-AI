@@ -75,3 +75,7 @@ prompt = template.invoke({
 if st.button('Summarize'):
     result = model.invoke(prompt)
     st.write(result.content[0]['text'])
+    
+    
+    
+template.save('temlate.json')
